@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ review.title }}</title>
+    <style>
+        body { font-family: sans-serif; max-width: 700px; margin: 50px auto; }
+        .content { padding: 20px; background: #fafafa; border-radius: 8px; margin: 15px 0; white-space: pre-wrap; }
+        .meta { color: #999; font-size: 14px; }
+        .btn { padding: 5px 15px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; color: white; display: inline-block; }
+        .btn-edit { background: #2196F3; }
+        .btn-delete { background: #f44336; }
+        .btn-back { background: #666; }
+    </style>
+</head>
+<body>
+    <a href="{% url 'review-list' %}" style="text-decoration: none; color: black; font-weight: bold; font-size: 30px;">🎬 My Movie Reviews</a>
+    <hr>
+    <h1>{{ review.title }}</h1>
+    <p class="meta">작성일: {{ review.created_at|date:"Y-m-d H:i" }}</p>
+    <div class="content"> 감독: {{ review.director }}</div>
+    <div class="content"> 배우: {{ review.actor }}</div>
+    <div class="content"> 장르: {{ review.genre }}</div>
+    <div class="content"> 별점: {{ review.star }}점</div>
+    <div class="content"> 러닝타임: {{ review.hours }}시간 {{ review.minutes }}분</div>
+    <div class="content"> 리뷰: {{ review.content }}</div>
+
+    <a href="{% url 'review-update' review.pk %}" class="btn btn-edit">수정</a>
+    <a href="{% url 'review-delete' review.pk %}" class="btn btn-delete">삭제</a>
+    <a href="{% url 'review-list' %}" class="btn btn-back">목록으로</a>
+</body>
+</html>
