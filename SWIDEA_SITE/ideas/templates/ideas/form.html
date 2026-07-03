@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Idea {{ action }}</h2>
+<hr>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <button type="submit">{{ action }} 완료</button>
+</form>     
+
+{% if idea %}
+    <a href="{% url 'idea_detail' idea.pk %}">취소하고 돌아가기</a>
+{% elif tool %}
+    <a href="{% url 'tool_detail' tool.pk %}">취소하고 돌아가기</a>
+{% else %}
+    <a href="{% if 'tool' in request.path %}{% url 'tool_list' %}{% else %}{% url 'idea_list' %}{% endif %}">취소하고 돌아가기</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>개발툴 {{ action }} </h2>
+<hr>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }} 
+    
+    <button type="submit">{{ action }} 완료</button>
+</form>
+
+<br>
+<a href="{% if tool %}{% url 'tool_detail' tool.pk %}{% else %}{% url 'tool_list' %}{% endif %}">취소하고 돌아가기</a>
+{% endblock %}
