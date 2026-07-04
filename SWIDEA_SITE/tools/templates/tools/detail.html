@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2> {{tool.name}}Detail</h2>
+<hr>
+<div>
+    <h3>개발툴 이름: {{ tool.name }}</h3>
+    <p>종류:{{ tool.kind }}</p>
+    <p>설명:{{ tool.content }}</p>
+</div>
+
+<div style="margin: 20px 0; display: flex; gap: 10px;">
+    <a href="{% url 'tool_update' tool.pk %}"><button>수정</button></a>
+    
+    <a href="{% url 'tool_list' %}"><button>목록</button></a>
+
+    <form action="{% url 'tool_delete' tool.pk %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" style="background-color: red; color: white;">삭제</button>
+    </form>
+</div>
+<hr>
+
+<h3>해당 개발툴을 사용하는 아이디어 리스트</h3>
+<ul>
+    {% for idea in related_ideas %}
+        <li>
+            <a href="{% url 'idea_detail' idea.id %}">{{ idea.title }}</a>
+        </li>
+    {% empty %}
+        <p style="color: gray;">아직 이 개발툴을 사용하는 아이디어가 없습니다.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

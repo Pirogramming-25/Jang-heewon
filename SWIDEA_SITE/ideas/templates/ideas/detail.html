@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>아이디어 디테일 페이지</h2>
+<hr>
+
+<div>
+    <h3>제목: {{ idea.title }}</h3>
+    {% if idea.image %}
+        <p><img src="{{ idea.image.url }}" alt="{{ idea.title }}" style="max-width: 400px;"></p>
+    {% endif %}
+    <p><strong>내용:</strong> {{ idea.content }}</p>
+    <p><strong>관심도:</strong> ⭐ {{ idea.interest }}</p>
+    
+    <p><strong>활용 개발툴:</strong> 
+        {% for tool in idea.devtools.all %}
+            <a href="{% url 'tool_detail' tool.pk %}"><span style="background-color: #e9ecef; padding: 3px 8px; border-radius: 4px; margin-right: 5px;">{{ tool.name }}</span></a>
+        {% empty %}
+            <span style="color: gray;">선택된 개발툴이 없습니다.</span>
+        {% endfor %}
+    </p>
+</div>
+
+<hr>
+
+<div>
+    <form action="{% url 'idea_star_toggle' idea.pk %}" method="POST" style="display: inline;">
+        {% csrf_token %}
+        {% if is_starred %}
+            <button type="submit" style="font-size: 18px; background: none; border: none; cursor: pointer;">찜 취소하기</button>
+        {% else %}
+            <button type="submit" style="font-size: 18px; background: none; border: none; cursor: pointer;">찜하기</button>
+        {% endif %}
+    </form>
+</div>
+
+<hr>
+
+<div style="margin-top: 20px; display: flex; gap: 10px;">
+    <a href="{% url 'idea_update' idea.pk %}"><button type="button">수정</button></a>
+    
+    <a href="{% url 'idea_list' %}"><button type="button">목록</button></a>
+
+    <form action="{% url 'idea_delete' idea.pk %}" method="POST" onsubmit="return confirm('정말 이 아이디어를 삭제하시겠습니까?');">
+        {% csrf_token %}
+        <button type="submit" style="background-color: red; color: white;">삭제</button>
+    </form>
+</div>
+
+{% endblock %}
