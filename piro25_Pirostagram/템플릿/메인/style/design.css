@@ -1,0 +1,360 @@
+.screen {
+  background-color: #ffffff;
+  overflow: hidden;
+  width: 100%;
+  min-width: 1440px;
+  min-height: 1024px;
+  position: relative;
+}
+
+.screen .line {
+  position: absolute;
+  top: 195px;
+  left: 316px;
+  width: 1124px;
+  height: 1px;
+  object-fit: cover;
+}
+
+.screen .sidebar-background {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 365px;
+  height: 1024px;
+  background-color: #f8f8f8;
+  box-shadow: 0px 0px 4px #00000040;
+}
+
+.screen .sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  width: 231px;
+  align-items: flex-start;
+  gap: 80px;
+  position: absolute;
+  top: 67px;
+  left: 68px;
+}
+
+.screen .logo {
+  position: relative;
+  align-self: stretch;
+  margin-top: -1px;
+  font-family: "Lobster Two-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 48px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .menu-items {
+  flex-direction: column;
+  gap: 30px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+}
+
+.screen .menu-item {
+  height: 25px;
+  gap: 20px;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+}
+
+.screen .frame {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.screen .vector {
+  position: absolute;
+  width: 66.67%;
+  height: 54.17%;
+  top: 45.83%;
+  left: 33.33%;
+}
+
+.screen .img {
+  position: absolute;
+  width: 91.67%;
+  height: 95.84%;
+  top: 4.16%;
+  left: 8.33%;
+}
+
+.screen .text-wrapper {
+  position: relative;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Abel-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .vector-2 {
+  position: absolute;
+  width: 34.75%;
+  height: 34.75%;
+  top: 65.25%;
+  left: 65.25%;
+}
+
+.screen .vector-3 {
+  position: absolute;
+  width: 91.67%;
+  height: 91.67%;
+  top: 8.33%;
+  left: 8.33%;
+}
+
+.screen .search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.screen .search-input {
+  position: relative;
+  width: 174px;
+  height: 30px;
+  background-color: #ebebeb;
+  border-radius: 20px;
+  border: 2px solid;
+  border-color: #000000;
+}
+
+.screen .search-button {
+  display: flex;
+  width: 45px;
+  height: 25px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 3px 8px 2px 7px;
+  position: relative;
+  background-color: #ededed6b;
+  border: 2px solid;
+  border-color: #000000;
+}
+
+.screen .button-label {
+  position: relative;
+  width: fit-content;
+  margin-top: -2px;
+  font-family: "Abel-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .vector-4 {
+  position: absolute;
+  width: 70.83%;
+  height: 54.17%;
+  top: 45.83%;
+  left: 29.17%;
+}
+
+.screen .vector-5 {
+  position: absolute;
+  width: 54.17%;
+  height: 70.83%;
+  top: 29.17%;
+  left: 45.83%;
+}
+
+.screen .vector-6 {
+  position: absolute;
+  width: 75.00%;
+  height: 91.67%;
+  top: 8.33%;
+  left: 25.00%;
+}
+
+.screen .vector-7 {
+  position: absolute;
+  width: 87.50%;
+  height: 50.00%;
+  top: 50.00%;
+  left: 12.50%;
+}
+
+.screen .story-section {
+  display: flex;
+  flex-direction: column;
+  width: 64px;
+  align-items: center;
+  gap: 12px;
+  position: absolute;
+  top: 50px;
+  left: 433px;
+}
+
+.screen .ellipse {
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  height: 64px;
+}
+
+.screen .add-to-story-label {
+  position: relative;
+  align-self: stretch;
+  font-family: "Lobster Two-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 14px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .ellipse-2 {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 54px;
+  height: 54px;
+  aspect-ratio: 1;
+}
+
+.screen .recommended-users {
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+  align-items: flex-start;
+  gap: 25px;
+  position: absolute;
+  top: 341px;
+  left: 1222px;
+}
+
+.screen .recommendation-label {
+  position: relative;
+  align-self: stretch;
+  margin-top: -1px;
+  font-family: "ADLaM Display-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .recommended-user {
+  display: flex;
+  flex-direction: column;
+  width: 129px;
+  align-items: flex-end;
+  gap: 25px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.screen .div {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.screen .ellipse-3 {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  aspect-ratio: 1;
+}
+
+.screen .recommended-username {
+  position: relative;
+  width: fit-content;
+  font-family: "ADLaM Display-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .user-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 50px;
+  position: absolute;
+  top: 72px;
+  left: 1140px;
+}
+
+.screen .user-profile {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 30px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.screen .username {
+  position: relative;
+  width: 89px;
+  height: 43px;
+  font-family: "ADLaM Display-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .switch-account {
+  position: relative;
+  width: fit-content;
+  font-family: "ADLaM Display-Regular", Helvetica;
+  font-weight: 400;
+  color: #0400ff;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .post-sorting-options {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  position: absolute;
+  top: 242px;
+  left: 410px;
+}
+
+.screen .text-wrapper-2 {
+  position: relative;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "ADLaM Display-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: normal;
+}

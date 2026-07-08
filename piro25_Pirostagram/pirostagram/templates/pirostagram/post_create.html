@@ -1,0 +1,89 @@
+<div style="width: 1440px; height: 1024px; position: relative; background: white; overflow: hidden">
+  <div style="width: 1214px; height: 0px; left: 316px; top: 195.50px; position: absolute; outline: 1px black solid; outline-offset: -0.50px"></div>
+  
+  <div style="width: 365px; height: 1024px; left: 1px; top: 1px; position: absolute; box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25)">
+    <div style="width: 365px; height: 1024px; left: 0px; top: 0px; position: absolute; background: #F8F8F8; box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25)"></div>
+    <div style="width: 231px; height: 505px; left: 67px; top: 66px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 80px; display: inline-flex">
+      <div style="align-self: stretch; color: black; font-size: 40px; font-family: Lobster Two; font-weight: 600; word-wrap: break-word">Pirostagram</div>
+      <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: flex">
+        
+        <a href="{% url 'pirostagram:index' %}" style="text-decoration: none; align-self: stretch; height: 25px; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
+          <div style="width: 24px; height: 24px; position: relative; overflow: hidden">
+            <div style="width: 6px; height: 9px; left: 9px; top: 12px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+            <div style="width: 18px; height: 19px; left: 3px; top: 2px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+          </div>
+          <div style="color: black; font-size: 20px; font-family: Abel; font-weight: 400; word-wrap: break-word">홈</div>
+        </a>
+
+        <div style="align-self: stretch; height: 25px; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
+          <div style="width: 24px; height: 24px; position: relative; overflow: hidden">
+            <div style="width: 4.34px; height: 4.34px; left: 16.66px; top: 16.66px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+            <div style="width: 16px; height: 16px; left: 3px; top: 3px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+          </div>
+          <div style="color: black; font-size: 20px; font-family: Abel; font-weight: 400; word-wrap: break-word">게시글 검색</div>
+        </div>
+        <form action="" method="GET" style="margin: 0; align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
+          <input type="text" name="post_search" placeholder="게시글 검색..." style="width: 174px; height: 30px; background: #EBEBEB; border-radius: 20px; border: 2px black solid; padding-left: 12px; box-sizing: border-box;">
+          <button type="submit" style="border: none; cursor: pointer; width: 45px; height: 25px; padding: 0; background: rgba(237.73, 237.73, 237.73, 0.42); outline: 2px black solid; outline-offset: -2px; justify-content: center; align-items: center; display: flex">
+            <div style="color: black; font-size: 16px; font-family: Abel; font-weight: 400;">검색</div>
+          </button>
+        </form>
+
+        <div style="align-self: stretch; height: 25px; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
+          <div style="width: 24px; height: 24px; position: relative; overflow: hidden">
+            <div style="width: 4.34px; height: 4.34px; left: 16.66px; top: 16.66px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+            <div style="width: 16px; height: 16px; left: 3px; top: 3px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+          </div>
+          <div style="color: black; font-size: 20px; font-family: Abel; font-weight: 400; word-wrap: break-word">유저 검색</div>
+        </div>
+        <form action="{% url 'pirostagram:user_search' %}" method="GET" style="margin: 0; align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
+          <input type="text" name="search_word" placeholder="유저 검색..." style="width: 174px; height: 30px; background: #EBEBEB; border-radius: 20px; border: 2px black solid; padding-left: 12px; box-sizing: border-box;">
+          <button type="submit" style="border: none; cursor: pointer; width: 45px; height: 25px; padding: 0; background: rgba(237.73, 237.73, 237.73, 0.42); outline: 2px black solid; outline-offset: -2px; justify-content: center; align-items: center; display: flex">
+            <div style="color: black; font-size: 16px; font-family: Abel; font-weight: 400;">검색</div>
+          </button>
+        </form>
+
+        <a href="{% url 'pirostagram:post_create' %}" style="text-decoration: none; align-self: stretch; height: 25px; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex; font-weight: bold;">
+          <div style="width: 24px; height: 24px; position: relative; overflow: hidden">
+            <div style="width: 18px; height: 18px; left: 3px; top: 3px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+          </div>
+          <div style="color: black; font-size: 20px; font-family: Abel; word-wrap: break-word">게시글 만들기</div>
+        </a>
+
+        <a href="{% url 'pirostagram:profile' username=request.user.username %}" style="text-decoration: none; align-self: stretch; height: 25px; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
+          <div style="width: 24px; height: 24px; position: relative; overflow: hidden">
+            <div style="width: 10px; height: 10px; left: 7px; top: 3px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+            <div style="width: 16px; height: 8px; left: 4px; top: 13px; position: absolute; outline: 2px black solid; outline-offset: -1px"></div>
+          </div>
+          <div style="color: black; font-size: 20px; font-family: Abel; font-weight: 400; word-wrap: break-word">프로필</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 450px; top: 50px; width: 850px; background: white;">
+    
+    <div style="max-width: 500px; background: white; border: 1px solid #dbdbdb; padding: 30px; border-radius: 5px; box-shadow: 0px 4px 10px rgba(0,0,0,0.05);">
+        <h3 style="font-family: ADLaM Display; text-align: center; margin-bottom: 20px; font-size: 24px; color: black;">➕ 새 게시물 만들기</h3>
+        
+        <form action="{% url 'pirostagram:post_create' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; font-family: Abel;">사진 선택</label>
+                <input type="file" name="image" accept="image/*" required style="width: 100%; padding: 8px; border: 1px solid #dbdbdb; border-radius: 4px; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; font-family: Abel;">문구 입력</label>
+                <textarea name="content" rows="5" placeholder="문구를 입력하세요..." style="width: 100%; padding: 10px; border: 1px solid #dbdbdb; border-radius: 4px; box-sizing: border-box; resize: none; font-size: 15px;"></textarea>
+            </div>
+
+            <button type="submit" style="width: 100%; background: #0095f6; color: white; border: 0; padding: 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; font-family: ADLaM Display;">
+                공유하기
+            </button>
+        </form>
+    </div>
+
+  </div>
+</div>

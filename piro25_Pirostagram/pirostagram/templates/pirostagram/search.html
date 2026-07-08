@@ -1,0 +1,36 @@
+<div style="max-width: 600px; margin: 0 auto; background: white; border: 1px solid #dbdbdb; padding: 30px; border-radius: 5px;">
+    <h3 style="text-align: center; color: #cc2444; font-family: Lobster Two; font-size: 28px;">Pirostagram</h3>
+    <h4 style="text-align: center; margin-bottom: 30px; font-family: ADLaM Display;">"{{ query }}"로 검색한 결과</h4>
+
+    {% for s_user in search_results %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #efefef;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: #dbdbdb;"></div>
+                
+                <a href="{% url 'pirostagram:profile' username=s_user.user_obj.username %}" style="text-decoration: none; color: black; font-weight: bold; font-size: 16px; font-family: ADLaM Display;">
+                    {{ s_user.user_obj.username }}
+                </a>
+            </div>
+            
+            <form action="{% url 'pirostagram:toggle_follow' user_id=s_user.user_obj.id %}" method="POST" style="margin: 0;">
+                {% csrf_token %}
+                
+                {% if s_user.is_following %}
+                    <button type="submit" style="background: #B7B7B7; color: black; border: 0; border-radius: 4px; padding: 6px 12px; font-weight: bold; cursor: pointer; font-family: ADLaM Display;">
+                        팔로잉
+                    </button>
+                {% else %}
+                    <button type="submit" style="background: #0095f6; color: white; border: 0; border-radius: 4px; padding: 6px 12px; font-weight: bold; cursor: pointer; font-family: ADLaM Display;">
+                        팔로우
+                    </button>
+                {% endif %}
+            </form>
+        </div>
+    {% empty %}
+        <p style="text-align: center; color: gray; margin: 40px 0; font-family: Abel;">검색 결과와 일치하는 사용자가 없습니다.</p>
+    {% endfor %}
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{% url 'pirostagram:index' %}" style="text-decoration: none; color: gray; font-size: 14px; font-family: Abel;">홈으로 돌아가기</a>
+    </div>
+</div>
