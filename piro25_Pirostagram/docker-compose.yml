@@ -1,11 +1,11 @@
 services:
   db:
     image: mysql:8.4
-    container_name: swidea-db
+    container_name: pirostagram-db
     env_file:
       - .env
     volumes:
-      - swidea-mysql-data:/var/lib/mysql
+      - pirostagram-mysql-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -14,8 +14,8 @@ services:
 
   web:
     build: .
-    image: h2ew0n/swidea-site:mysql
-    container_name: swidea-web
+    image: h2ew0n/pirostagram-site:mysql
+    container_name: pirostagram-web
     depends_on:
       db:
         condition: service_healthy
@@ -27,4 +27,4 @@ services:
       - ./media:/app/media
 
 volumes:
-  swidea-mysql-data:
+  pirostagram-mysql-data:
