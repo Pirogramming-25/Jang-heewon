@@ -15,6 +15,9 @@ def handle_analysis_request(request, template_name, page_info, min_len, max_len,
     if is_login_required and not request.user.is_authenticated:
         return redirect(f"/accounts/login/?next={request.path}&required=1")
 
+    # 세션 키 (비회원용 기록 저장 공간)
+    session_key = f'guest_recent_logs_{task_type}'
+
     if request.method == 'POST':
         form = AnalysisForm(request.POST, min_length=min_len, max_length=max_len)
         
@@ -29,6 +32,7 @@ def handle_analysis_request(request, template_name, page_info, min_len, max_len,
 
             current_user = request.user if request.user.is_authenticated else None
 
+            # DB에 기록 저장
             InferenceHistory.objects.create(
                 user=current_user,
                 task=task_type,
@@ -36,17 +40,26 @@ def handle_analysis_request(request, template_name, page_info, min_len, max_len,
                 output_text=result
             )
 
-            filter_kwargs = {'task': task_type}
+            # 최근 5개 기록 추출
             if request.user.is_authenticated:
-                filter_kwargs['user'] = request.user
+                recent_logs = list(
+                    InferenceHistory.objects.filter(task=task_type, user=request.user)
+                    .order_by('-created_at')[:5]
+                    .values('input_text', 'output_text', 'created_at')
+                )
             else:
-                filter_kwargs['user__isnull'] = True
-
-            recent_logs = list(
-                InferenceHistory.objects.filter(**filter_kwargs)
-                .order_by('-created_at')[:5]
-                .values('input_text', 'output_text', 'created_at')
-            )
+                # 비회원: 세션에 최근 기록 최신순(앞쪽)으로 저장
+                guest_logs = request.session.get(session_key, [])
+                new_log = {
+                    'input_text': user_text,
+                    'output_text': result
+                }
+                guest_logs.insert(0, new_log)
+                guest_logs = guest_logs[:5]  # 최근 5개만 유지
+                
+                request.session[session_key] = guest_logs
+                request.session.modified = True
+                recent_logs = guest_logs
 
             return JsonResponse({
                 'success': True,
@@ -57,13 +70,13 @@ def handle_analysis_request(request, template_name, page_info, min_len, max_len,
         except Exception as e:
             return JsonResponse({'success': False, 'error': f"처리 중 오류가 발생했습니다: {str(e)}"}, status=500)
 
-    filter_kwargs = {'task': task_type}
+    # --- GET 요청 (페이지 접속 및 새로고침) ---
     if request.user.is_authenticated:
-        filter_kwargs['user'] = request.user
+        recent_logs = InferenceHistory.objects.filter(task=task_type, user=request.user).order_by('-created_at')[:5]
     else:
-        filter_kwargs['user__isnull'] = True
-
-    recent_logs = InferenceHistory.objects.filter(**filter_kwargs).order_by('-created_at')[:5]
+        # 비회원이 새로고침(GET)하면 세션 기록 초기화 (삭제)
+        request.session.pop(session_key, None)
+        recent_logs = []
 
     context = {
         'page_info': page_info,
@@ -72,6 +85,7 @@ def handle_analysis_request(request, template_name, page_info, min_len, max_len,
         'max_length': max_len,
     }
     return render(request, template_name, context)
+
 
 def sentiment_view(request):
     page_info = {
