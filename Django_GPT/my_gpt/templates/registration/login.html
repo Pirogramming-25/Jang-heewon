@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}로그인{% endblock %}
+
+{% block content %}
+<h2>로그인</h2>
+
+<div class="info-card">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">로그인</button>
+    </form>
+</div>
+
+<script>
+    // 페이지 로드 시 URL 파라미터 확인
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // required=1 이 파라미터에 있으면 Alert 출력
+        if (urlParams.get('required') === '1') {
+            alert('로그인 후 이용해주세요');
+        }
+    });
+</script>
+{% endblock %}

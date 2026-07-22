@@ -1,0 +1,102 @@
+# ==========================================
+# Python & Django Cache / Compiled files
+# ==========================================
+*.py[cod]
+*$py.class
+__pycache__/
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ==========================================
+# Django Specific
+# ==========================================
+# Local database (SQLite)
+*.sqlite3
+*.db
+
+# Media uploads (사용자가 업로드한 파일)
+/media/
+
+# Static collected files (collectstatic 실행 시 생성되는 파일)
+/staticfiles/
+
+# Environment variables (보안/설정 파일)
+.env
+.env.local
+.env.*.local
+db.sqlite3-secrets
+
+# Session / Logs
+*.log
+local_settings.py
+
+# ==========================================
+# Virtual Environments (가상환경)
+# ==========================================
+venv/
+.venv/
+env/
+.env/
+env.bak/
+venv.bak/
+
+# ==========================================
+# IDE & Editors (에디터 설정 파일)
+# ==========================================
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+*.iws
+
+# ==========================================
+# OS Specific (운영체제 생성 파일)
+# ==========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ==========================================
+# Testing & Coverage
+# ==========================================
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
