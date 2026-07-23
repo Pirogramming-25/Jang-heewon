@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}유해 표현 분석{% endblock %}
+
+{% block content %}
+    <h2>{{ page_info.title }}</h2>
+    <div class="info-card">
+        <p><strong>사용 모델:</strong> {{ page_info.model_name }}</p>
+        <p><strong>입력 언어:</strong> {{ page_info.language }}</p>
+        <p><strong>입력 제한:</strong> {{ min_length }}자 ~ {{ max_length }}자</p>
+        <p style="color: #d9534f;"><strong>접근 권한:</strong> 로그인 회원 전용</p>
+    </div>
+
+    <form id="analysis-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea name="content" id="user-input" placeholder="유해성(독성) 여부를 검사할 텍스트를 입력하세요..."></textarea>
+        </div>
+        <button type="submit" id="submit-btn">유해 표현 검사 실행</button>
+    </form>
+
+    <div id="loading">AI가 유해성을 검사 중입니다...</div>
+
+    <div id="result-box">
+        <h3>검사 결과</h3>
+        <p id="result-text"></p>
+    </div>
+
+    <div id="error-box"></div>
+
+    <div class="history-section">
+        <h3>최근 실행 기록 (최대 5개)</h3>
+        <div id="history-list">
+            {% for log in recent_logs %}
+                <div class="history-item">
+                    <div class="history-date">{{ log.created_at|date:"Y-m-d H:i:s" }}</div>
+                    <p><strong>입력:</strong> {{ log.input_text }}</p>
+                    <p><strong>결과:</strong> {{ log.output_text }}</p>
+                </div>
+            {% empty %}
+                <p>최근 실행 기록이 없습니다.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('analysis-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const submitBtn = document.getElementById('submit-btn');
+            const loading = document.getElementById('loading');
+            const resultBox = document.getElementById('result-box');
+            const resultText = document.getElementById('result-text');
+            const errorBox = document.getElementById('error-box');
+
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            resultBox.style.display = 'none';
+            errorBox.style.display = 'none';
+
+            try {
+                const response = await fetch("", {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    resultText.innerText = data.result;
+                    resultBox.style.display = 'block';
+                    updateHistoryUI(data.recent_logs);
+                } else {
+                    errorBox.innerText = data.error;
+                    errorBox.style.display = 'block';
+                }
+            } catch (err) {
+                errorBox.innerText = "요청 처리 중 오류가 발생했습니다.";
+                errorBox.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        function updateHistoryUI(logs) {
+            const historyList = document.getElementById('history-list');
+            if (!logs || logs.length === 0) return;
+            let html = '';
+            logs.forEach(log => {
+                const dateStr = new Date(log.created_at).toLocaleString('ko-KR');
+                html += `
+                    <div class="history-item">
+                        <div class="history-date">${dateStr}</div>
+                        <p><strong>입력:</strong> ${escapeHtml(log.input_text)}</p>
+                        <p><strong>결과:</strong> ${escapeHtml(log.output_text)}</p>
+                    </div>`;
+            });
+            historyList.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+
+{% block title %}복합 분석{% endblock %}
+
+{% block extra_css %}
+<style>
+    .info-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .info-card p {
+        margin: 6px 0;
+        font-size: 0.95rem;
+    }
+    .access-required {
+        color: #e74c3c;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+    textarea {
+        width: 100%;
+        height: 140px;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    .btn-submit {
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: bold;
+    }
+    .btn-submit:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+    .btn-regen {
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: bold;
+        display: none;
+    }
+    .btn-regen:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    #loading {
+        display: none;
+        color: #0d6efd;
+        font-weight: bold;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+    }
+
+    #result-box {
+        display: none;
+        background-color: #eef7ff;
+        border-left: 5px solid #0d6efd;
+        padding: 25px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        border-radius: 0 8px 8px 0;
+    }
+    #result-box h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        color: #000;
+    }
+    .res-section {
+        margin-bottom: 18px;
+    }
+    .res-section h4 {
+        margin: 0 0 6px 0;
+        font-size: 1rem;
+        color: #111;
+    }
+    .res-section p, .res-section ul {
+        margin: 4px 0;
+        font-size: 0.95rem;
+        color: #222;
+        line-height: 1.5;
+    }
+    .res-section ul {
+        padding-left: 20px;
+    }
+
+    #error-box {
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        background-color: #f8d7da;
+        border-left: 5px solid #dc3545;
+        color: #842029;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .history-section {
+        margin-top: 40px;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 25px;
+    }
+    .history-section h3 {
+        font-size: 1.15rem;
+        margin-bottom: 15px;
+    }
+    .history-item {
+        background-color: #fafafa;
+        border: 1px solid #eee;
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+    .history-date {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h2>복합 분석</h2>
+
+    <div class="info-card">
+        <p><strong>사용 모델:</strong> {{ page_info.model_name|default:"RoBERTa / DistilBART / Toxic-BERT" }}</p>
+        <p><strong>입력 언어:</strong> {{ page_info.language|default:"영어 (English)" }}</p>
+        <p><strong>입력 제한:</strong> {{ min_length|default:200 }}자 ~ {{ max_length|default:5000 }}자</p>
+        <p><strong>접근 권한:</strong> <span class="access-required">로그인 회원 전용</span></p>
+    </div>
+
+    {% csrf_token %}
+
+    <div class="form-group">
+        <textarea id="user-input" placeholder="분석할 긴 문서를 입력하세요 (최소 200자 이상)..."></textarea>
+    </div>
+
+    <div class="btn-group">
+        <button type="button" id="submit-btn" class="btn-submit">복합 분석 실행</button>
+        <button type="button" id="regen-btn" class="btn-regen">재생성 (Pipeline 다시 실행)</button>
+    </div>
+
+    <div id="loading">AI가 복합 분석 중입니다...</div>
+
+    <div id="result-box">
+        <h3>복합 분석 결과</h3>
+        <div id="result-content"></div>
+    </div>
+
+    <div id="error-box"></div>
+
+    <div class="history-section">
+        <h3>최근 실행 기록 (최대 5개)</h3>
+        <div id="history-list">
+            {% if recent_logs %}
+                {% for log in recent_logs %}
+                    <div class="history-item">
+                        <div class="history-date">{{ log.created_at|date:"Y-m-d H:i:s" }}</div>
+                        <p><strong>입력:</strong> {{ log.input_text }}</p>
+                        <p><strong>결과:</strong> {{ log.output_text }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p id="no-history">최근 실행 기록이 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
+
+    async function executeAnalysis() {
+        const textInput = document.getElementById('user-input').value.trim();
+        const submitBtn = document.getElementById('submit-btn');
+        const regenBtn = document.getElementById('regen-btn');
+        const loading = document.getElementById('loading');
+        const resultBox = document.getElementById('result-box');
+        const resultContent = document.getElementById('result-content');
+        const errorBox = document.getElementById('error-box');
+
+        if (textInput.length < 200 || textInput.length > 5000) {
+            errorBox.innerText = `텍스트는 최소 200자 이상, 최대 5,000자 이하로 입력해 주세요. (현재 ${textInput.length}자)`;
+            errorBox.style.display = 'block';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        regenBtn.disabled = true;
+        loading.style.display = 'block';
+        errorBox.style.display = 'none';
+
+        try {
+            const response = await fetch("", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ text: textInput })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success !== false) {
+                const res = data.result;
+
+                let html = `
+                    <div class="res-section">
+                        <h4>1. 입력 원문</h4>
+                        <p>${escapeHtml(res.original_text || textInput)}</p>
+                    </div>
+                    <div class="res-section">
+                        <h4>2. 요약문</h4>
+                        <p>${escapeHtml(res.summary || '요약 결과가 없습니다.')}</p>
+                    </div>
+                    <div class="res-section">
+                        <h4>3. 감정 분석</h4>
+                        <p>Label: ${escapeHtml(res.sentiment?.label || 'N/A')}</p>
+                        <p>Score: ${res.sentiment?.score !== undefined ? res.sentiment.score : 'N/A'}</p>
+                    </div>
+                    <div class="res-section">
+                        <h4>4. 유해 표현 분석</h4>
+                        <p>위험도가 가장 높은 Label: ${escapeHtml(res.toxicity?.highest_label || 'N/A')}</p>
+                        <p>Score: ${res.toxicity?.score !== undefined ? res.toxicity.score : 'N/A'}</p>
+                        <p>전체 Label 점수:</p>
+                        <ul>
+                `;
+
+                if (res.toxicity?.all_scores && typeof res.toxicity.all_scores === 'object') {
+                    for (const [lbl, score] of Object.entries(res.toxicity.all_scores)) {
+                        html += `<li>${escapeHtml(lbl)}: ${score}</li>`;
+                    }
+                } else {
+                    html += `<li>점수 정보 없음</li>`;
+                }
+
+                html += `
+                        </ul>
+                    </div>
+                    <div class="res-section">
+                        <h4>5. 종합 판정</h4>
+                        <p><strong>${escapeHtml(res.overall_verdict || '판정 결과가 없습니다.')}</strong></p>
+                    </div>
+                `;
+
+                resultContent.innerHTML = html;
+                resultBox.style.display = 'block';
+                regenBtn.style.display = 'inline-block';
+
+                if (data.recent_logs) {
+                    updateHistoryUI(data.recent_logs);
+                }
+            } else {
+                errorBox.innerText = data.error || "분석 처리에 실패했습니다.";
+                errorBox.style.display = 'block';
+            }
+        } catch (err) {
+            console.error(err);
+            errorBox.innerText = "서버 요청 중 오류가 발생했습니다.";
+            errorBox.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            regenBtn.disabled = false;
+            loading.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const submitBtn = document.getElementById('submit-btn');
+        const regenBtn = document.getElementById('regen-btn');
+
+        if (submitBtn) submitBtn.addEventListener('click', executeAnalysis);
+        if (regenBtn) regenBtn.addEventListener('click', executeAnalysis);
+    });
+
+    function updateHistoryUI(logs) {
+        const historyList = document.getElementById('history-list');
+        if (!logs || logs.length === 0) return;
+
+        let html = '';
+        logs.forEach(log => {
+            const dateStr = log.created_at ? new Date(log.created_at).toLocaleString('ko-KR') : '';
+            html += `
+                <div class="history-item">
+                    ${dateStr ? `<div class="history-date">${dateStr}</div>` : ''}
+                    <p><strong>입력:</strong> ${escapeHtml(log.input_text)}</p>
+                    <p><strong>결과:</strong> ${escapeHtml(typeof log.output_text === 'object' ? JSON.stringify(log.output_text) : log.output_text)}</p>
+                </div>
+            `;
+        });
+        historyList.innerHTML = html;
+    }
+</script>
+{% endblock %}
